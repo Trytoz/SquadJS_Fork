@@ -2,9 +2,7 @@ import Logger from 'core/logger';
 import Rcon from 'core/rcon';
 
 export default class SquadRcon extends Rcon {
-
-    
-(decodedPacket) {
+    processChatPacket(decodedPacket) {
         const matchChat = decodedPacket.body.match(
             /\[(ChatAll|ChatTeam|ChatSquad|ChatAdmin)] \[Online IDs:EOS: ([0-9a-f]{32}) steam: (\d{17})\] (.+?) : (.*)/
         );
