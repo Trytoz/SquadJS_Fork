@@ -16,29 +16,34 @@ import RoundTickets from './round-tickets.js';
 import RoundWinner from './round-winner.js';
 import ServerTickRate from './server-tick-rate.js';
 import PlayerJoinSucceeded from './player-join-succeeded.js';
-export default class SquadLogParser extends LogParser {
-  constructor(options) {
-    super('SquadGame.log', options);
-  }
+import FragDetonates from "./frag-detonates.js";
+import LatHitVehicle from "./lat-hit-vehicle.js";
 
-  getRules() {
-    return [
-      AdminBroadcast,
-      DeployableDamaged,
-      NewGame,
-      PlayerConnected,
-      PlayerDisconnected,
-      PlayerDamaged,
-      PlayerDied,
-      PlayerPossess,
-      PlayerRevived,
-      PlayerUnPossess,
-      PlayerWounded,
-      RoundEnded,
-      RoundTickets,
-      RoundWinner,
-      ServerTickRate,
-      PlayerJoinSucceeded
-    ];
-  }
+export default class SquadLogParser extends LogParser {
+    constructor(options) {
+        super('SquadGame.log', options);
+    }
+
+    getRules() {
+        return [
+            AdminBroadcast,
+            DeployableDamaged,
+            NewGame,
+            PlayerConnected,
+            PlayerDisconnected,
+            PlayerDamaged,
+            PlayerDied,
+            PlayerPossess,
+            PlayerRevived,
+            PlayerUnPossess,
+            PlayerWounded,
+            RoundEnded,
+            RoundTickets,
+            RoundWinner,
+            ServerTickRate,
+            PlayerJoinSucceeded,
+            FragDetonates,
+            LatHitVehicle
+        ];
+    }
 }

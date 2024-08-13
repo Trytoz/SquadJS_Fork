@@ -21,8 +21,9 @@ class Layers {
     this.layers = [];
 
     Logger.verbose('Layers', 1, 'Pulling layers...');
+	console.log('Layers.url:','https://raw.gitmirror.comSquad-Wiki/squad-wiki-pipeline-map-data/master/completed_output/_Current%20Version/finished.json')
     const response = await axios.get(
-      'https://raw.githubusercontent.com/Squad-Wiki/squad-wiki-pipeline-map-data/master/completed_output/_Current%20Version/finished.json'
+      'https://raw.gitmirror.comSquad-Wiki/squad-wiki-pipeline-map-data/master/completed_output/_Current%20Version/finished.json'
     );
 
     for (const layer of response.data.Maps) {
