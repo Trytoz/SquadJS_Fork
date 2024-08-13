@@ -16,6 +16,9 @@ import RoundTickets from './round-tickets.js';
 import RoundWinner from './round-winner.js';
 import ServerTickRate from './server-tick-rate.js';
 import PlayerJoinSucceeded from './player-join-succeeded.js';
+import FragDetonates from "./frag-detonates.js";
+import LatHitVehicle from "./lat-hit-vehicle.js";
+
 export default class SquadLogParser extends LogParser {
   constructor(options) {
     super('SquadGame.log', options);
@@ -38,7 +41,9 @@ export default class SquadLogParser extends LogParser {
       RoundTickets,
       RoundWinner,
       ServerTickRate,
-      PlayerJoinSucceeded
+      PlayerJoinSucceeded,
+      FragDetonates,
+      LatHitVehicle,
     ];
   }
 }

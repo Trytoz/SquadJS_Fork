@@ -323,6 +323,16 @@ export default class SquadServer extends EventEmitter {
     this.logParser.on('TICK_RATE', (data) => {
       this.emit('TICK_RATE', data);
     });
+
+    this.logParser.on('FRAG-DETONATES', async (data) => {
+      data.attacker = await this.getPlayerByController(data.playercontroller);
+      this.emit('FRAG_DETONATES', data);
+    });
+
+    this.logParser.on('LAT-HIT-VEHICLE', async (data) => {
+      data.attacker = await this.getPlayerByController(data.player_eosid);
+      this.emit('LAT_HIT_VEHICLE', data);
+    });
   }
 
   async restartLogParser() {
@@ -370,7 +380,8 @@ export default class SquadServer extends EventEmitter {
    * @arg {'player'} type - return players instead of just IDs. Returns
    *   only admins that are online.
    * @returns {Player[]}
-   *//**
+   */
+  /**
    * Get steamIDs of every admin that has the permission. This overload
    * exists for compatibility with pre-EOS API and is equivalent to
    * <code>getAdminsWithPermisson(perm, type='steamID')</code>.
@@ -388,18 +399,25 @@ export default class SquadServer extends EventEmitter {
     switch (type) {
       // 1) if admin is registered with steamID and is online then swap to eosID
       // 2) deduplicate output in case same admin was in 2 lists with different IDs
-      case 'anyID' : return [
-        ...new Set(ret.map((ID) => {
-          for (const adm of this.players) {
-            if(isPlayerID(ID, adm)) return adm.eosID;
-          }
-          return ID;
-        }))
-      ];
-      case 'player' : return anyIDsToPlayers(ret, this.players);
-      case 'eosID'  : {filter = (ID) => ID.match(steamRgx) === null; break;}
-      case 'steamID': break;
-      default: throw new Error(`Expected type == 'steamID'|'eosID'|'anyID'|'player', got '${type}'.`);
+      case 'anyID' :
+        return [
+          ...new Set(ret.map((ID) => {
+            for (const adm of this.players) {
+              if (isPlayerID(ID, adm)) return adm.eosID;
+            }
+            return ID;
+          }))
+        ];
+      case 'player' :
+        return anyIDsToPlayers(ret, this.players);
+      case 'eosID'  : {
+        filter = (ID) => ID.match(steamRgx) === null;
+        break;
+      }
+      case 'steamID':
+        break;
+      default:
+        throw new Error(`Expected type == 'steamID'|'eosID'|'anyID'|'player', got '${type}'.`);
     }
     const matches = [];
     const fails = [];
@@ -530,12 +548,15 @@ export default class SquadServer extends EventEmitter {
   }
 
   async updateServerInformation() {
+	Logger.verbose('SquadServer', 1, `a2s 1.`);
+	Logger.verbose('SquadServer', 1, this.updateA2SInformationTimeout);
     if (this.updateA2SInformationTimeout) clearTimeout(this.updateA2SInformationTimeout);
-
+	Logger.verbose('SquadServer', 1, `a2s 1.1`);
     Logger.verbose('SquadServer', 1, `Updating server information...`);
 
     try {
       const rawData = await this.rcon.execute(`ShowServerInfo`);
+	  Logger.verbose('SquadServer', 1, `a2s 2.`);
       Logger.verbose('SquadServer', 3, `Server information raw data`, rawData);
       const data = JSON.parse(rawData);
       Logger.verbose('SquadServer', 2, `Server information data`, JSON.data);
@@ -563,7 +584,7 @@ export default class SquadServer extends EventEmitter {
         matchStartTime: this.getMatchStartTimeByPlaytime(data.PLAYTIME_I),
         gameVersion: data.GameVersion_s
       };
-
+	  Logger.verbose('SquadServer', 1, `a2s 3.`);
       this.serverName = info.serverName;
 
       this.maxPlayers = info.maxPlayers;

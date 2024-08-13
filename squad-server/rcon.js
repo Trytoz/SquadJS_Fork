@@ -223,4 +223,68 @@ export default class SquadRcon extends Rcon {
   async switchTeam(anyID) {
     await this.execute(`AdminForceTeamChange "${anyID}"`);
   }
+
+      // 踢出玩家
+    async SM_KickPlayer(steamID, message) {
+        await this.execute(`AdminKick "${steamID}" ${message}`);
+    }
+
+    // 更换地图
+    async SM_AdminChangeLayer(map) {
+        await this.execute(`AdminChangeLayer "${map}"`);
+    }
+
+    // 预设地图
+    async SM_AdminSetNextLayer(map) {
+        await this.execute(`AdminSetNextLayer "${map}"`);
+    }
+
+    // 结束对局
+    async SM_AdminEndMatch() {
+        await this.execute(`AdminEndMatch`);
+    }
+
+    // 解散小队
+    async SM_AdminDisbandSquad(teamid, squadid) {
+        await this.execute(`AdminDisbandSquad ${teamid} ${squadid}`);
+    }
+
+    // 将玩家移出小队
+    async SM_AdminRemovePlayerFromSquadById(playerid) {
+        await this.execute(`AdminRemovePlayerFromSquadById ${playerid}`);
+    }
+
+    // 重置小队队名
+    async SM_AdminRenameSquad(teamid, squadid) {
+        await this.execute(`AdminRenameSquad ${teamid} ${squadid}`);
+    }
+
+    // 打乱阵营 参考至打乱阵营插件
+    async SM_RandomTeam() {
+        try {
+            const players = await this.getListPlayers();
+            // console.log('Players:', players); // 或者进行其他处理
+            let currentIndex = players.length;
+            let temporaryValue;
+            let randomIndex;
+
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                temporaryValue = players[currentIndex];
+                players[currentIndex] = players[randomIndex];
+                players[randomIndex] = temporaryValue;
+            }
+
+            let team = '1';
+            for (const player of players) {
+                if (player.teamID !== team) await this.switchTeam(player.steamID);
+
+                team = team === '1' ? '2' : '1';
+            }
+        } catch (error) {
+            console.error('打乱阵营', `出现错误: ${error.message}`);
+        }
+    }
 }

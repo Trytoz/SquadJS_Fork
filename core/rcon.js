@@ -36,6 +36,7 @@ export default class Rcon extends EventEmitter {
 
     // setup socket
     this.client = new net.Socket();
+	this.client.setMaxListeners(20);
     this.client.on('data', this.decodeData);
     this.client.on('close', this.onClose);
     this.client.on('error', this.onError);
