@@ -22,7 +22,7 @@ class Layers {
 
     Logger.verbose('Layers', 1, 'Pulling layers...');
     const response = await axios.get(
-      'https://raw.gitmirror.com/Squad-Wiki/squad-wiki-pipeline-map-data/master/completed_output/_Current%20Version/finished.json'
+      'https://raw.githubusercontent.com/Squad-Wiki/squad-wiki-pipeline-map-data/master/completed_output/_Current%20Version/finished.json'
     );
 
     for (const layer of response.data.Maps) {
@@ -45,8 +45,8 @@ class Layers {
     return null;
   }
 
-  getLayerById(layerId) {
-    return this.getLayerByCondition((layer) => layer.layerid === layerId);
+  getLayerByName(name) {
+    return this.getLayerByCondition((layer) => layer.name === name);
   }
 
   getLayerByClassname(classname) {
