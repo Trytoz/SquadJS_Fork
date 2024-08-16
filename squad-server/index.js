@@ -66,7 +66,7 @@ export default class SquadServer extends EventEmitter {
         Logger.verbose(
             'SquadServer',
             1,
-            `Beginning to watch ${this.options.host}:${this.options.queryPort}...`
+            `开始监听 ${this.options.host}:${this.options.queryPort}...`
         );
 
         await Layers.pull();
@@ -81,7 +81,7 @@ export default class SquadServer extends EventEmitter {
 
         await this.logParser.watch();
 
-        Logger.verbose('SquadServer', 1, `Watching ${this.serverName}...`);
+        Logger.verbose('SquadServer', 1, `正在监听 ${this.serverName}...`);
 
         await this.pingSquadJSAPI();
     }
@@ -169,10 +169,10 @@ export default class SquadServer extends EventEmitter {
         try {
             await this.rcon.disconnect();
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to stop RCON instance when restarting.', err);
+            Logger.verbose('SquadServer', 1, '重新启动时未能停止 RCON 实例.', err);
         }
 
-        Logger.verbose('SquadServer', 1, 'Setting up new RCON instance...');
+        Logger.verbose('SquadServer', 1, '正在设置新的 RCON 实例...');
         this.setupRCON();
         await this.rcon.connect();
     }
@@ -212,7 +212,7 @@ export default class SquadServer extends EventEmitter {
             Logger.verbose(
                 'SquadServer',
                 1,
-                `Player connected ${data.playerSuffix} - SteamID: ${data.steamID} - EOSID: ${data.eosID} - IP: ${data.ip}`
+                `玩家已连接 ${data.playerSuffix} - SteamID: ${data.steamID} - EOSID: ${data.eosID} - IP: ${data.ip}`
             );
 
             data.player = await this.getPlayerByEOSID(data.eosID);
@@ -335,10 +335,10 @@ export default class SquadServer extends EventEmitter {
         try {
             await this.logParser.unwatch();
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to stop LogParser instance when restarting.', err);
+            Logger.verbose('SquadServer', 1, '重新启动时未能停止 LogParser 实例.', err);
         }
 
-        Logger.verbose('SquadServer', 1, 'Setting up new LogParser instance...');
+        Logger.verbose('SquadServer', 1, '正在设置新的 LogParser 实例...');
         this.setupLogParser();
         await this.logParser.watch();
     }
@@ -435,7 +435,7 @@ export default class SquadServer extends EventEmitter {
     async updatePlayerList() {
         if (this.updatePlayerListTimeout) clearTimeout(this.updatePlayerListTimeout);
 
-        Logger.verbose('SquadServer', 1, `Updating player list...`);
+        Logger.verbose('SquadServer', 1, `正在更新玩家列表...`);
 
         try {
             const oldPlayerInfo = {};
@@ -477,15 +477,15 @@ export default class SquadServer extends EventEmitter {
                 Logger.verbose(
                     'SquadServer',
                     1,
-                    `Real Player Count: ${this.a2sPlayerCount} but loaded ${players.length}`
+                    `实际玩家数量：${this.a2sPlayerCount}，但只加载了 ${players.length} 个`
                 );
 
             this.emit('UPDATED_PLAYER_INFORMATION');
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to update player list.', err);
+            Logger.verbose('SquadServer', 1, '未能更新玩家列表.', err);
         }
 
-        Logger.verbose('SquadServer', 1, `Updated player list.`);
+        Logger.verbose('SquadServer', 1, `已更新玩家列表.`);
 
         this.updatePlayerListTimeout = setTimeout(this.updatePlayerList, this.updatePlayerListInterval);
     }
@@ -493,15 +493,15 @@ export default class SquadServer extends EventEmitter {
     async updateSquadList() {
         if (this.updateSquadListTimeout) clearTimeout(this.updateSquadListTimeout);
 
-        Logger.verbose('SquadServer', 1, `Updating squad list...`);
+        Logger.verbose('SquadServer', 1, `正在更新小队列表...`);
 
         try {
             this.squads = await this.rcon.getSquads();
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to update squad list.', err);
+            Logger.verbose('SquadServer', 1, '未能更新小队列表.', err);
         }
 
-        Logger.verbose('SquadServer', 1, `Updated squad list.`);
+        Logger.verbose('SquadServer', 1, `已更新小队列表.`);
 
         this.updateSquadListTimeout = setTimeout(this.updateSquadList, this.updateSquadListInterval);
     }
@@ -509,7 +509,7 @@ export default class SquadServer extends EventEmitter {
     async updateLayerInformation() {
         if (this.updateLayerInformationTimeout) clearTimeout(this.updateLayerInformationTimeout);
 
-        Logger.verbose('SquadServer', 1, `Updating layer information...`);
+        Logger.verbose('SquadServer', 1, `正在更新地图图层信息...`);
 
         try {
             const currentMap = await this.rcon.getCurrentMap();
@@ -530,10 +530,10 @@ export default class SquadServer extends EventEmitter {
 
             this.emit('UPDATED_LAYER_INFORMATION');
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to update layer information.', err);
+            Logger.verbose('SquadServer', 1, '未能更新地图图层信息.', err);
         }
 
-        Logger.verbose('SquadServer', 1, `Updated layer information.`);
+        Logger.verbose('SquadServer', 1, `已更新地图图层信息.`);
 
         this.updateLayerInformationTimeout = setTimeout(
             this.updateLayerInformation,
@@ -548,13 +548,13 @@ export default class SquadServer extends EventEmitter {
     async updateServerInformation() {
         if (this.updateA2SInformationTimeout) clearTimeout(this.updateA2SInformationTimeout);
 
-        Logger.verbose('SquadServer', 1, `Updating server information...`);
+        Logger.verbose('SquadServer', 1, `正在更新服务器信息...`);
 
         try {
             const rawData = await this.rcon.execute(`ShowServerInfo`);
-            Logger.verbose('SquadServer', 3, `Server information raw data`, rawData);
+            Logger.verbose('SquadServer', 3, `服务器信息原始数据:`, rawData);
             const data = JSON.parse(rawData);
-            Logger.verbose('SquadServer', 2, `Server information data`, JSON.data);
+            Logger.verbose('SquadServer', 2, `服务器信息数据`, JSON.data);
 
             const info = {
                 raw: data,
@@ -601,10 +601,10 @@ export default class SquadServer extends EventEmitter {
             this.emit('UPDATED_A2S_INFORMATION', info);
             this.emit('UPDATED_SERVER_INFORMATION', info);
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to update server information.', err);
+            Logger.verbose('SquadServer', 1, '未能更新服务器信息.', err);
         }
 
-        Logger.verbose('SquadServer', 1, `Updated server information.`);
+        Logger.verbose('SquadServer', 1, `已更新服务器信息.`);
 
         this.updateA2SInformationTimeout = setTimeout(
             this.updateA2SInformation,
@@ -692,7 +692,7 @@ export default class SquadServer extends EventEmitter {
     async pingSquadJSAPI() {
         if (this.pingSquadJSAPITimeout) clearTimeout(this.pingSquadJSAPITimeout);
 
-        Logger.verbose('SquadServer', 1, 'Pinging SquadJS API...');
+        Logger.verbose('SquadServer', 1, '正在 Ping SquadJS API...');
 
         const payload = {
             // Send information about the server.
@@ -724,16 +724,16 @@ export default class SquadServer extends EventEmitter {
                 Logger.verbose(
                     'SquadServer',
                     1,
-                    `Successfully pinged the SquadJS API. Got back error: ${data.error}`
+                    `成功 Ping 了 SquadJS API。返回错误：${data.error}`
                 );
             else
                 Logger.verbose(
                     'SquadServer',
                     1,
-                    `Successfully pinged the SquadJS API. Got back message: ${data.message}`
+                    `成功 Ping 了 SquadJS API。返回消息：${data.message}`
                 );
         } catch (err) {
-            Logger.verbose('SquadServer', 1, 'Failed to ping the SquadJS API: ', err.message);
+            Logger.verbose('SquadServer', 1, '未能 Ping SquadJS API: ', err.message);
         }
 
         this.pingSquadJSAPITimeout = setTimeout(this.pingSquadJSAPI, this.pingSquadJSAPIInterval);
